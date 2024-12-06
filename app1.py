@@ -11,6 +11,10 @@ st.set_page_config(page_title="Freight Network Dashboard", layout="wide")
 # Initialize geocoder
 geolocator = Nominatim(user_agent="freight_network_app")
 
+# Initialize session state for selected hub
+if 'selected_hub' not in st.session_state:
+    st.session_state.selected_hub = "Chicago"
+
 # Define hub data
 hubs = {
     "Chicago": {"lat": 41.8781, "lon": -87.6298, "color": "#000000"},  # Black
@@ -116,12 +120,12 @@ def create_network_map(selected_hub=None):
             scope='usa',
             projection_type='albers usa',
             showland=True,
-            landcolor='#9da4ae',  # Changed to requested color for USA
-            countrycolor='#8b919a',  # Slightly darker shade for borders
+            landcolor='#2f3037',  # Darker color for USA land
+            countrycolor='#1a1a1d',  # Darker border color
             showlakes=True,
-            lakecolor='#aeb4bd',  # Slightly lighter shade for lakes
+            lakecolor='#1f2024',  # Darker lake color
             showsubunits=True,
-            subunitcolor='#8b919a',  # State borders matching country color
+            subunitcolor='#1a1a1d',  # Darker state borders
             bgcolor='rgba(0,0,0,0)',
             center=dict(lat=39.5, lon=-98.35),
             lonaxis=dict(

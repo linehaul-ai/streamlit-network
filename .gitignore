@@ -1,0 +1,33 @@
+# Ignore virtual environment
+venv/
+env/
+ENV/
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore cache files
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.ipynb_checkpoints
+build/
+dist/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.egg
+.local
+.installed.cfg
+*.egg-info/
+graphql_schema.json
+node_modules/
+npm-debug.log
+yarn-error.log
+.pypackage/
+.pytest_cache/
