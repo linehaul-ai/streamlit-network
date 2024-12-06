@@ -20,7 +20,7 @@ hubs = {
     "Chicago": {"lat": 41.8781, "lon": -87.6298, "color": "#000000"},  # Black
     "Los Angeles": {"lat": 34.0522, "lon": -118.2437, "color": "#fc0106"},  # Red
     "Stockton": {"lat": 37.9537, "lon": -121.2908, "color": "#3569be"},  # Light Blue
-    "Greensboro": {"lat": 36.0726, "lon": -81.7935, "color": "#4fcc33"},  # Lime Green
+    "Greensboro": {"lat": 36.0726, "lon": -79.7915, "color": "#4fcc33"},  # Lime Green
     "Philadelphia": {"lat": 39.9526, "lon": -75.1652, "color": "#FFBE0B"},  # Yellow
     "Cleveland": {"lat": 41.4993, "lon": -81.6944, "color": "#FF006E"},  # Pink
     "St. Louis": {"lat": 38.6270, "lon": -90.1999, "color": "#8338EC"}  # Purple
