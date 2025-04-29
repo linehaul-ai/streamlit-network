@@ -1,4 +1,4 @@
-# Linehaul.ai Network Dashboard
+# Linehaul.ai Powerlanes Dashboard
 
 The **Linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing drop trailer markets and high-volume freight lanes. This dashboard provides a visual interface to [Linehaul.ai](https://linehaul.ai)'s innovative freight network solutions.
 
