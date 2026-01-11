@@ -15,6 +15,7 @@ This skill should be triggered when:
 - **Developing data apps** that need rapid prototyping and deployment
 - **Implementing widgets** like buttons, sliders, file uploaders, or chat interfaces
 - **Working with charts** using built-in charting or custom visualizations
+- **Building map visualizations** with st.map, st.pydeck_chart, or st.plotly_chart for geographic data
 - **Deploying apps** to Streamlit Community Cloud or other platforms
 - **Testing Streamlit apps** with the app testing framework
 - **Configuring Streamlit** apps with themes, secrets, or custom settings
@@ -107,7 +108,289 @@ map_data = pd.DataFrame({
 st.map(map_data)
 ```
 
-### Example 4: Layouts & Containers
+### Example 4: Map Visualizations (st.map, st.pydeck_chart, st.plotly_chart)
+
+Streamlit provides three powerful approaches for creating interactive map visualizations, each with different capabilities and use cases.
+
+#### Option 1: st.map() - Simple & Quick Maps
+
+**Best for:** Basic scatterplot maps with minimal configuration. Auto-centers and auto-zooms to your data.
+
+```python
+import streamlit as st
+import pandas as pd
+
+# Basic map with latitude/longitude
+df = pd.DataFrame({
+    'lat': [37.76, 37.77, 37.78],
+    'lon': [-122.4, -122.41, -122.42]
+})
+st.map(df)
+
+# Customized with fixed styling
+st.map(df, size=20, color="#0044ff")
+
+# Dynamic sizing and coloring from data columns
+df_dynamic = pd.DataFrame({
+    'latitude': [37.76, 37.77, 37.78, 37.79],
+    'longitude': [-122.4, -122.41, -122.42, -122.43],
+    'size_col': [100, 200, 150, 300],  # Size in meters
+    'color_col': ['#ff0000', '#00ff00', '#0000ff', '#ffff00']
+})
+st.map(df_dynamic, 
+       latitude='latitude', 
+       longitude='longitude',
+       size='size_col', 
+       color='color_col',
+       zoom=11)
+```
+
+**Key Features:**
+- Automatically searches for columns named `lat`, `latitude`, `LAT`, or `LATITUDE` (same for longitude)
+- Uses **Carto** tiles by default (can configure Mapbox with API key)
+- Size parameter in **meters** (physical ground distance)
+- Color accepts hex strings, RGB/RGBA tuples, or column names
+
+#### Option 2: st.pydeck_chart() - Advanced 3D Visualizations
+
+**Best for:** Complex visualizations with 3D rendering, multiple layers, and advanced interactivity.
+
+```python
+import streamlit as st
+import pandas as pd
+import pydeck as pdk
+
+# Sample data - network connections between cities
+connections = pd.DataFrame({
+    'start_lat': [37.7749, 40.7128, 41.8781],
+    'start_lon': [-122.4194, -74.0060, -87.6298],
+    'end_lat': [34.0522, 29.7604, 33.4484],
+    'end_lon': [-118.2437, -95.3698, -112.0740],
+})
+
+# Create arc layer for connections
+arc_layer = pdk.Layer(
+    'ArcLayer',
+    data=connections,
+    get_source_position='[start_lon, start_lat]',
+    get_target_position='[end_lon, end_lat]',
+    get_source_color=[255, 0, 0, 160],
+    get_target_color=[0, 255, 0, 160],
+    auto_highlight=True,
+    width_scale=0.0001,
+    get_width='outbound',
+    width_min_pixels=2,
+    pickable=True,
+)
+
+# Hub cities as scatterplot
+hubs = pd.DataFrame({
+    'lat': [37.7749, 40.7128, 41.8781],
+    'lon': [-122.4194, -74.0060, -87.6298],
+    'name': ['San Francisco', 'New York', 'Chicago'],
+    'radius': [30000, 40000, 35000]
+})
+
+scatter_layer = pdk.Layer(
+    'ScatterplotLayer',
+    data=hubs,
+    get_position='[lon, lat]',
+    get_color='[255, 140, 0]',
+    get_radius='radius',
+    pickable=True,
+)
+
+# Set view state
+view_state = pdk.ViewState(
+    latitude=37.7749,
+    longitude=-95.7129,
+    zoom=3,
+    pitch=40,
+)
+
+# Create deck with multiple layers
+deck = pdk.Deck(
+    layers=[arc_layer, scatter_layer],
+    initial_view_state=view_state,
+    tooltip={"text": "{name}"},
+    map_style='mapbox://styles/mapbox/light-v9',
+)
+
+st.pydeck_chart(deck)
+```
+
+**Interactive Selection with PyDeck:**
+
+```python
+import streamlit as st
+import pydeck as pdk
+import pandas as pd
+
+# Enable selection
+selected = st.pydeck_chart(
+    deck,
+    on_select="rerun",
+    selection_mode="multi-object",
+    height=600,
+    key="map_selection"
+)
+
+# Access selected data
+if selected and 'selection' in selected:
+    st.write("Selected objects:", selected['selection'])
+```
+
+**Key Features:**
+- Supports multiple layers (ScatterplotLayer, HexagonLayer, ArcLayer, etc.)
+- 3D visualizations with pitch and bearing controls
+- WebGL-powered for high performance
+- Interactive tooltips and selections
+- **Limitation:** Uses 2 WebGL contexts per chart - avoid more than 8 charts per page
+
+**Map Tile Providers:**
+- Default: Carto (set via `CARTO_API_KEY` environment variable)
+- Mapbox: Requires account and API key (`map_style='mapbox://styles/...'`)
+
+#### Option 3: st.plotly_chart() - Plotly Geographic Charts
+
+**Best for:** Interactive Plotly charts with geographic projections, including scattergeo and choropleth maps.
+
+```python
+import streamlit as st
+import plotly.express as px
+import pandas as pd
+
+# Geographic scatterplot
+df = pd.DataFrame({
+    'city': ['San Francisco', 'New York', 'Chicago', 'Los Angeles'],
+    'lat': [37.7749, 40.7128, 41.8781, 34.0522],
+    'lon': [-122.4194, -74.0060, -87.6298, -118.2437],
+    'population': [883305, 8336817, 2746388, 3979576],
+    'state': ['CA', 'NY', 'IL', 'CA']
+})
+
+# Scattergeo with geographic projection
+fig = px.scatter_geo(
+    df,
+    lat='lat',
+    lon='lon',
+    text='city',
+    size='population',
+    color='state',
+    hover_name='city',
+    hover_data={'population': ':,'},
+    scope='usa',
+    title='US City Populations'
+)
+
+fig.update_traces(marker=dict(sizemin=5))
+fig.update_layout(geo=dict(
+    showland=True,
+    landcolor='rgb(243, 243, 243)',
+    coastlinecolor='rgb(204, 204, 204)',
+))
+
+st.plotly_chart(fig, use_container_width=True)
+```
+
+**Mapbox Scatter (Modern Approach):**
+
+```python
+import plotly.express as px
+
+# Note: Mapbox traces are deprecated - use scatter_map instead
+fig = px.scatter_map(
+    df,
+    lat='lat',
+    lon='lon',
+    size='population',
+    color='state',
+    hover_name='city',
+    zoom=3,
+    mapbox_style="open-street-map"
+)
+
+st.plotly_chart(fig, theme="streamlit")
+```
+
+**Key Features:**
+- Full Plotly interactivity (hover, zoom, pan)
+- Geographic projections (scattergeo) or tile-based (scatter_map)
+- Streamlit theme automatically applied (use `theme=None` for Plotly default)
+- For >1000 points, uses WebGL rendering (can force SVG with `render_mode="svg"`)
+
+**Important:** Mapbox traces are deprecated in favor of Maplibre-based traces (introduced in Plotly.py 5.24+)
+
+#### Choosing the Right Map Approach
+
+| Feature | st.map() | st.pydeck_chart() | st.plotly_chart() |
+|---------|----------|-------------------|-------------------|
+| **Ease of use** | ⭐⭐⭐⭐⭐ Simplest | ⭐⭐⭐ Moderate | ⭐⭐⭐⭐ Easy |
+| **3D support** | ❌ No | ✅ Yes | ❌ No |
+| **Multiple layers** | ❌ No | ✅ Yes | ⚠️ Limited |
+| **Custom styling** | ⚠️ Basic | ✅ Extensive | ✅ Extensive |
+| **Selection events** | ❌ No | ✅ Yes | ✅ Yes |
+| **Best for** | Quick demos | Complex networks | Data analysis |
+| **Performance** | Fast | Very fast (WebGL) | Fast |
+
+#### Map Development Best Practices
+
+**Performance:**
+- Cache geocoding results with `@st.cache_data`
+- For PyDeck, limit to 8 charts per page (WebGL context limits)
+- For large datasets (>1000 points), PyDeck typically performs best
+
+**Tile Providers:**
+- **Carto:** Free, no API key required (default for st.map)
+- **Mapbox:** Requires API key, more style options
+- **OpenStreetMap:** Free, available in Plotly
+
+**Common Patterns:**
+
+```python
+import streamlit as st
+import pandas as pd
+from geopy.geocoders import Nominatim
+
+# Geocoding with caching
+@st.cache_data
+def geocode_city(city_name):
+    """Convert city name to coordinates"""
+    geolocator = Nominatim(user_agent="myapp")
+    location = geolocator.geocode(city_name)
+    if location:
+        return location.latitude, location.longitude
+    return None, None
+
+# Network map pattern (like your app1.py)
+def create_network_map(hub_city, connected_cities):
+    """Create a map showing hub and its connections"""
+    # Your map creation logic here
+    pass
+```
+
+**Session State for Map Interactions:**
+
+```python
+import streamlit as st
+
+# Track selected location
+if 'selected_city' not in st.session_state:
+    st.session_state.selected_city = None
+
+# Create interactive map
+selected = st.pydeck_chart(
+    deck,
+    on_select="rerun",
+    key="city_selector"
+)
+
+if selected:
+    st.session_state.selected_city = selected
+    st.write(f"Selected: {st.session_state.selected_city}")
+```
+
+### Example 5: Layouts & Containers
 
 ```python
 import streamlit as st
@@ -141,7 +424,7 @@ with st.expander("Click to expand"):
     st.write("Hidden content revealed!")
 ```
 
-### Example 5: Forms & User Input
+### Example 6: Forms & User Input
 
 ```python
 import streamlit as st
@@ -164,7 +447,7 @@ with st.form("my_form"):
         }
 ```
 
-### Example 6: Caching for Performance
+### Example 7: Caching for Performance
 
 ```python
 import streamlit as st
@@ -191,7 +474,7 @@ model = load_model()
 st.write(data)
 ```
 
-### Example 7: Chat Interface (LLM Apps)
+### Example 8: Chat Interface (LLM Apps)
 
 ```python
 import streamlit as st
@@ -219,7 +502,7 @@ if prompt := st.chat_input("What would you like to know?"):
         st.write(response)
 ```
 
-### Example 8: App Testing with pytest
+### Example 9: App Testing with pytest
 
 ```python
 # app.py
@@ -243,7 +526,7 @@ def test_increment_and_add():
     assert at.markdown[0].value == "Beans counted: 1"
 ```
 
-### Example 9: User Authentication (OpenID Connect)
+### Example 10: User Authentication (OpenID Connect)
 
 ```python
 import streamlit as st
@@ -268,7 +551,7 @@ else:
 # server_metadata_url = "https://accounts.google.com/.well-known/openid-configuration"
 ```
 
-### Example 10: Configuration & Theming
+### Example 11: Configuration & Theming
 
 ```toml
 # .streamlit/config.toml
@@ -455,7 +738,7 @@ with col2:
 ```
 
 ### LLM Chat App Template
-See Quick Reference #7 for complete chat interface implementation.
+See Quick Reference Example 8 for complete chat interface implementation.
 
 ## Resources
 
