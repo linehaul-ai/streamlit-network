@@ -15,18 +15,16 @@ The **linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing
    git clone https://github.com/yourusername/linehaul-network-dashboard.git
    ```
 
-2. Install Dependencies:
+2. Install dependencies and run:
    ```bash
+   uv sync
    uv run streamlit run app1.py
    ```
-3. Launch the app:
-   ```bash
-   streamlit run app.py
-   ```
-4. Open your browser at: ``` http://localhost:8501 ```
+
+3. Open your browser at: `http://localhost:8501`
 
 ## Dependencies
--  Python 3.8+
+-  Python 3.9+
 -  Streamlit
 -  Plotly
 -  Pandas

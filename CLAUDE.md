@@ -10,12 +10,12 @@ This is the Linehaul.ai Network Dashboard - a Streamlit app that visualizes drop
 
 ### Run the app locally
 ```bash
-streamlit run app1.py
+uv run streamlit run app1.py
 ```
 
 ### Install dependencies
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ### Docker

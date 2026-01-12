@@ -656,7 +656,7 @@ def main():
     # Map
     all_cities = get_all_city_coordinates()
     fig = create_map(st.session_state.selected_hub, all_cities)
-    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
 
 if __name__ == "__main__":
