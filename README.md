@@ -17,7 +17,7 @@ The **linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing
 
 2. Install Dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv run streamlit run app1.py
    ```
 3. Launch the app:
    ```bash

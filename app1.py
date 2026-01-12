@@ -73,7 +73,7 @@ section[data-testid="stSidebar"] { display: none; }
 }
 
 .logo-img {
-    height: auto;
+    height: 85px;
     width: auto;
 }
 

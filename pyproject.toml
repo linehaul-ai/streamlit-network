@@ -1,0 +1,13 @@
+[project]
+name = "streamlit-network"
+version = "0.2.0"
+description = "linehaul.ai National Drop Trailer Network"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "streamlit",
+    "plotly",
+    "pandas",
+    "numpy",
+    "geopy",
+]

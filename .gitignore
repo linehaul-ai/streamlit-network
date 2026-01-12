@@ -31,3 +31,5 @@ npm-debug.log
 yarn-error.log
 .pypackage/
 .pytest_cache/
+.claude/
+.venv/

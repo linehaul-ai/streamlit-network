@@ -1,5 +1,4 @@
 {
-    "taipyStudio.gUI.elementsFilePaths": [],
-    "wolf.disableHotModeWarning": true,
-    "docwriter.style": "NumPy"
+  "wolf.disableHotModeWarning": true,
+  "docwriter.style": "NumPy",
 }
