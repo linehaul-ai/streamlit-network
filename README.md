@@ -1,6 +1,11 @@
 # linehaul.ai Drop Trailer Network Dashboard
-
 The **linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing drop trailer markets and high-volume freight lanes. This dashboard provides a visual interface to [Linehaul.ai](https://linehaul.ai)'s innovative freight network solutions.
+
+
+<center>
+<img width="2436" height="1915" alt="image" src="https://github.com/user-attachments/assets/3482dc9f-a797-49fa-bba8-15eda8f19da3" />
+
+</center>
 
 ## Features
 
@@ -37,7 +42,3 @@ Contributions are welcome! Fork the repository, make improvements, and submit a 
 
 ## License
 This project is licensed under the [MIT License](https://opensource.org/license/mit).
-
-<center>
-  <img src="https://github.com/user-attachments/assets/92a0a83f-e8d0-43d1-8f11-d32a41b2fe98" alt="image">
-</center>
