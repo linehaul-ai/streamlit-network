@@ -1,6 +1,6 @@
-# Linehaul.ai Powerlanes Dashboard
+# linehaul.ai Drop Trailer Network Dashboard
 
-The **Linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing drop trailer markets and high-volume freight lanes. This dashboard provides a visual interface to [Linehaul.ai](https://linehaul.ai)'s innovative freight network solutions.
+The **linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing drop trailer markets and high-volume freight lanes. This dashboard provides a visual interface to [Linehaul.ai](https://linehaul.ai)'s innovative freight network solutions.
 
 ## Features
 
@@ -15,18 +15,16 @@ The **Linehaul.ai Network Dashboard** is a Streamlit-powered app for visualizing
    git clone https://github.com/yourusername/linehaul-network-dashboard.git
    ```
 
-2. Install Dependencies:
+2. Install dependencies and run:
    ```bash
-   pip install -r requirements.txt
+   uv sync
+   uv run streamlit run app1.py
    ```
-3. Launch the app:
-   ```bash
-   streamlit run app.py
-   ```
-4. Open your browser at: ``` http://localhost:8501 ```
+
+3. Open your browser at: `http://localhost:8501`
 
 ## Dependencies
--  Python 3.8+
+-  Python 3.9+
 -  Streamlit
 -  Plotly
 -  Pandas
